@@ -13,12 +13,10 @@ Puppeteer 是一个 node 库，他提供了一组用来操纵 Chrome 的 API, �
 ## Demo
 
 - 使用 `Puppeteer` 截取 [TypeScript 入门教程](https://ts.xcatliu.com/) 全书为PDF并合并
+  
+  > 待解决：调用外部模块方法到 `evaluate()` 方法内而不是在内部声明
 
 ## 学习资源
 
-- [Puppeteer 异常处理](https://www.codercto.com/a/34024.html)
-- [Puppeteer 入门教程](http://www.r9it.com/20171106/puppeteer.html)
+- [Puppeteer 常见异常处理](https://www.codercto.com/a/34024.html)
 - [Puppeteer 中文文档](https://zhaoqize.github.io/puppeteer-api-zh_CN/#/)
-- [前端神器 puppeteer 入门及实践](https://www.jianshu.com/p/56babda610f9)
-- [Puppeteer 初探](https://segmentfault.com/a/1190000015371795)
-- [Puppeteer 实践](https://www.jianshu.com/p/2f04f9d665ce)
