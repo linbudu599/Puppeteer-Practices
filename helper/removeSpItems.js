@@ -17,5 +17,6 @@ function removeSpItems(arr, idxArr = []) {
     });
     return arr;
   }
+  return arr;
 }
 module.exports = removeSpItems;

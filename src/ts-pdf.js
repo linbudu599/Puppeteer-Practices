@@ -2,7 +2,6 @@ const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
 const rm = require("rimraf");
-// const removeSpItems = require("../helper/removeSpItems");
 
 function resolve(dir, dir2 = "") {
   return path.posix.join(__dirname, "./", dir, dir2);
@@ -12,7 +11,7 @@ function resolve(dir, dir2 = "") {
   const browser = await puppeteer.launch({});
   let page = await browser.newPage();
 
-  console.log("Starting Load Cover Page...");
+  console.log("Loading First Page...");
 
   await page.goto("https://ts.xcatliu.com/");
   await page.waitFor(2000);
@@ -35,12 +34,13 @@ function resolve(dir, dir2 = "") {
   };
 
   let wh = await page.evaluate(() => {
+    // 选取文章主干部分，可以进行DOM操作
     const content = document.querySelector(
       "#__GITBOOK__ROOT__CLIENT__ .reset-3c756112--wholeContentPage-6c3f1fc5"
     );
     const div = document.createElement("div");
     div.innerHTML = `
-			<p>Test!</p>
+			<p>测试插入操作</p>
 		`;
     content.appendChild(div);
     return {
@@ -62,9 +62,9 @@ function resolve(dir, dir2 = "") {
   function mkdirOutputpath() {
     try {
       fs.mkdirSync(outputPath);
-      console.log("mkdir is successful!");
+      console.log("mkdir successfully!");
     } catch (e) {
-      console.log("mkdir is failed!", e);
+      console.log("mkdir  failed!", e);
     }
   }
   // 如果不存在 则创建
@@ -74,12 +74,12 @@ function resolve(dir, dir2 = "") {
     // 存在，则删除该目录下的文件再重新生成目录
     rm(outputPath, err => {
       if (err) throw err;
-      console.log("remove the files is successful!");
+      console.log("remove the file successfully!");
       mkdirOutputpath();
     });
   }
 
-  console.log("outputPath", outputPath);
+  console.log("Current OutputPath", outputPath);
 
   console.log("Creating the Cover");
 
@@ -91,18 +91,13 @@ function resolve(dir, dir2 = "") {
     format: config.format
   });
 
-  console.log("created pdf for fisrt page is successful!");
+  console.log("Pdf For Fisrt Page Successfully!");
 
   console.log("Starting Generate Content Page...");
 
   await page.waitFor(2000);
 
-  // FIXME: 引用问题
-  // await page.exposeFunction("removeSpItems", (arr, idxArr) =>
-  //   removeSpItems(arr, idxArr)
-  // );
-
-  let aLinkArr = await page.evaluate(() => {
+  let aLinkArr = await page.evaluate(async () => {
     const linkUl = document.querySelectorAll("ul.list-20526648")[4];
     let aLinks = [
       ...linkUl.querySelectorAll(
@@ -130,8 +125,9 @@ function resolve(dir, dir2 = "") {
         return arr;
       }
     }
-    // window.removeSpItems(aLinks, [0, 1, 5, 16, 26]);
-    removeSpItems(aLinks, [0, 1, 5, 16, 26]);
+
+    // 移除部分不需要的目录
+    await removeSpItems(aLinks, [0, 1, 5, 16, 26]);
 
     return aLinks.map(a => {
       // 处理方法相同
@@ -143,6 +139,7 @@ function resolve(dir, dir2 = "") {
   });
 
   console.log("章节数: ", aLinkArr.length);
+
   for (let i = 1; i < aLinkArr.length; i++) {
     let a = aLinkArr[i];
 
@@ -150,7 +147,7 @@ function resolve(dir, dir2 = "") {
 
     await page.waitFor(2000);
 
-    console.log("go to ", a.href);
+    console.log("Going to ", a.href);
 
     let wh = await page.evaluate(a => {
       // 给标题加上序号，便于查看
@@ -181,7 +178,7 @@ function resolve(dir, dir2 = "") {
     });
   }
 
-  console.log("all is successful!");
+  console.log("The Progress Finished Successfully!");
 
   browser.close();
 })();
