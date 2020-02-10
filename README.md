@@ -12,10 +12,12 @@ Puppeteer 是一个 node 库，他提供了一组用来操纵 Chrome 的 API, �
 
 ## Demo
 
-- 使用 `Puppeteer` 截取 [TypeScript 入门教程](https://ts.xcatliu.com/) 全书为PDF并合并
+-  截取 [TypeScript 入门教程](https://ts.xcatliu.com/) 全书为PDF并合并
   
   > ~~待解决：调用外部模块方法到 `evaluate()` 方法内而不是在内部声明~~
-  > （Issue已回复，见[#5320](https://github.com/puppeteer/puppeteer/issues/5320)），入参为 **DOM元素** 的函数无法被抽取到到第三方。
+  > （Issue已回复，见[#5320](https://github.com/puppeteer/puppeteer/issues/5320)，Puppeteer会自动序列化参数，因此入参为 **DOM元素** 的函数无法被抽取到到第三方，这里我就直接把函数声明在调用处上面了。
+
+- 模拟登陆学习通
 
 ## 学习资源
 
