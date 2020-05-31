@@ -25,12 +25,12 @@ function resolve(dir, dir2 = "") {
       top: "60px",
       right: "0px",
       bottom: "60px",
-      left: "0px"
+      left: "0px",
     },
     // 生成pdf时是否显示页眉页脚
     displayHeaderFooter: true,
     // 生成pdf页面格式
-    format: "A4"
+    format: "A4",
   };
 
   let wh = await page.evaluate(() => {
@@ -45,7 +45,7 @@ function resolve(dir, dir2 = "") {
     content.appendChild(div);
     return {
       width: 1920,
-      height: document.body.clientHeight
+      height: document.body.clientHeight,
     };
   });
 
@@ -72,7 +72,7 @@ function resolve(dir, dir2 = "") {
     mkdirOutputpath();
   } else {
     // 存在，则删除该目录下的文件再重新生成目录
-    rm(outputPath, err => {
+    rm(outputPath, (err) => {
       if (err) throw err;
       console.log("remove the file successfully!");
       mkdirOutputpath();
@@ -88,7 +88,7 @@ function resolve(dir, dir2 = "") {
     path: resolve(config.outputPath, "TypeScript 入门教程.pdf"),
     margin: config.margin,
     displayHeaderFooter: config.displayHeaderFooter,
-    format: config.format
+    format: config.format,
   });
 
   console.log("Pdf For Fisrt Page Successfully!");
@@ -102,7 +102,7 @@ function resolve(dir, dir2 = "") {
     let aLinks = [
       ...linkUl.querySelectorAll(
         "a.link-a079aa82--primary-53a25e66--link-faf6c434"
-      )
+      ),
     ];
 
     function removeSpItems(arr, idxArr = []) {
@@ -119,7 +119,7 @@ function resolve(dir, dir2 = "") {
           return val - idx;
         });
 
-        newIdx.forEach(idx => {
+        newIdx.forEach((idx) => {
           arr.splice(idx, 1);
         });
         return arr;
@@ -129,11 +129,11 @@ function resolve(dir, dir2 = "") {
     // 移除部分不需要的目录
     await removeSpItems(aLinks, [0, 1, 5, 16, 26]);
 
-    return aLinks.map(a => {
+    return aLinks.map((a) => {
       // 处理方法相同
       return {
         href: a.href.trim(),
-        text: a.innerText.trim()
+        text: a.innerText.trim(),
       };
     });
   });
@@ -149,7 +149,7 @@ function resolve(dir, dir2 = "") {
 
     console.log("Going to ", a.href);
 
-    let wh = await page.evaluate(a => {
+    let wh = await page.evaluate((a) => {
       // 给标题加上序号，便于查看
       let h1Node = document.querySelector(".post__title h1");
       if (h1Node) {
@@ -160,7 +160,7 @@ function resolve(dir, dir2 = "") {
 
       return {
         width: 1920,
-        height: document.body.clientHeight
+        height: document.body.clientHeight,
       };
     }, a);
 
@@ -174,7 +174,7 @@ function resolve(dir, dir2 = "") {
       path: resolve(config.outputPath, `${a.text}.pdf`),
       margin: config.margin,
       displayHeaderFooter: config.displayHeaderFooter,
-      format: config.format
+      format: config.format,
     });
   }
 
