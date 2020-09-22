@@ -63,45 +63,74 @@ const outputConfig = {
 
 (async () => {
   const browser = await puppeteer.launch({
-    // headless: false,
+    headless: false,
   });
 
   const page = await browser.newPage();
   log("√ Open New Page Successfully");
   //   await page.goto(`${BASE_URL}/${Tab2URL["FE"]}`);
-  await page.goto("https://juejin.im/post/6874604408030789640");
+  // FIXME: use single article url to test PDF print
+  await page.goto("https://juejin.im/post/6859314697204662279");
   log(`√ Open ${BASE_URL}/${Tab2URL["FE"]} Successfully`);
   await page.waitFor(2000);
 
-  // Get Article Main Part
   const wh = await page.evaluate(() => {
-    // TODO: insert actions
-    // TODO: title & author
-    const main = document.querySelector(".main-area")!;
-    const container = document.querySelector(".view")!;
-
-    const comment = document.querySelector("#comment-box")!;
-    const tag = document.querySelector(".tag-list-box")!;
-    const banner = document.querySelector(".article-banner")!;
-
-    const recommended = document.querySelector(".recommended-area")!;
-    const suspended = document.querySelector(".article-suspended-panel")!;
-
-    main.removeChild(comment);
-    main.removeChild(tag);
-    main.removeChild(banner);
-
-    container.removeChild(recommended);
-    container.removeChild(suspended);
-
     return {
       width: 1920,
-      height: document.body.clientHeight,
+      height: document.documentElement.clientHeight,
     };
+    // return {
+    //   width: 400,
+    //   height: 628,
+    // };
   });
 
   await page.setViewport(wh);
   await page.waitFor(3000);
+
+  // Get Article Main Part
+  await page.evaluate(() => {
+    // TODO: insert actions
+    // TODO: title & author
+    try {
+      const main = document.querySelector(".main-area")!;
+      const container = document.querySelector(".view")!;
+      const global = document.querySelector(".view-container")!;
+
+      const comment = document.querySelector("#comment-box")!;
+      const tag = document.querySelector(".tag-list-box")!;
+      const banner = document.querySelector(".article-banner")!;
+
+      const recommended = document.querySelector(".recommended-area")!;
+      const suspended = document.querySelector(".article-suspended-panel")!;
+      const action = document.querySelector(".action-box")!;
+
+      const header = document.querySelector(".main-header-box")!;
+
+      main.removeChild(comment);
+      main.removeChild(tag);
+      main.removeChild(banner);
+      main.removeChild(action);
+      global.removeChild(header);
+
+      container.removeChild(recommended);
+      container.removeChild(suspended);
+
+      comment.parentNode!.removeChild(comment);
+      tag.parentNode!.removeChild(tag);
+      banner.parentNode!.removeChild(banner);
+      recommended.parentNode!.removeChild(recommended);
+      suspended.parentNode!.removeChild(suspended);
+      header.parentNode!.removeChild(header);
+      action.parentNode!.removeChild(action);
+
+      // const imgList = Array.from(document.querySelectorAll("img"));
+
+      // for (let img of imgList) {
+      //   img.parentNode!.removeChild(img);
+      // }
+    } catch (e) {}
+  });
 
   const outputPath = path.resolve(__dirname, outputConfig.outputPath);
   const isExists = fs.existsSync(outputPath);
@@ -118,11 +147,11 @@ const outputConfig = {
 
   log(`Current OutputPath: ${outputPath}`);
 
-  await page.pdf({
-    // 注意文件名需要带上 ".pdf" 后缀
-    path: path.resolve(__dirname, outputPath, "xxx.pdf"),
-    margin: outputConfig.margin,
-    displayHeaderFooter: outputConfig.displayHeaderFooter,
-    format: outputConfig.format,
-  });
+  // await page.pdf({
+  //   // 注意文件名需要带上 ".pdf" 后缀
+  //   path: path.resolve(__dirname, outputPath, "xxx.pdf"),
+  //   margin: outputConfig.margin,
+  //   displayHeaderFooter: outputConfig.displayHeaderFooter,
+  //   format: outputConfig.format,
+  // });
 })();
